@@ -1,0 +1,108 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+struct Item
+{
+    string nama;
+    int harga;
+    int value;
+    string kategori;
+};
+
+void tambahBarang(vector<Item> &daftarBarang)
+{
+    Item barang;
+    char pil;
+
+    while (true)
+    {
+        cout << "-----------------------\n";
+        cout << "Nama Barang     : ";
+        cin >> barang.nama;
+        cout << "Harga           : ";
+        cin >> barang.harga;
+        cout << "Value (1-10)    : ";
+        cin >> barang.value;
+        cout << "Kategori        : ";
+        cin >> barang.kategori;
+        cout << "-----------------------\n\n";
+
+        daftarBarang.push_back(barang);
+        cout << "Barang berhasil ditambahkan!\n";
+        cout << "Tambah barang lagi? (y/n): ";
+        cin >> pil;
+        if (pil == 'n' || pil == 'N')
+        {
+            break;
+        }
+    }
+}
+
+void menu(vector<Item> &daftarBarang)
+{
+    int pil;
+    cout << "\n========================\n";
+    cout << "      Menu Pilihan      \n";
+    cout << "========================\n";
+    cout << "1. Hasil Optimasi\n";
+    cout << "2. Tambah Barang\n";
+    cout << "3. Undo Barang Terakhir\n";
+    cout << "4. Lihat Daftar Barang\n";
+    cout << "Masukkan pilihan: ";
+    cin >> pil;
+
+    if (pil == 1)
+    {
+        // hasilOptimasi(daftarBarang, budget);
+        // tolong tambahin ya hehe
+        cout << "[!] Fitur optimasi belum dibuat.\n";
+    }
+    else if (pil == 2)
+    {
+        tambahBarang(daftarBarang);
+    }
+    else if (pil == 3)
+    {
+        // blm ada. tambahin juga ya
+    }
+    else if (pil == 4)
+    {
+        // ini juga 
+    }
+    else
+    {
+        cout << "Pilihan tidak valid.\n";
+    }
+}
+
+int main()
+{
+    int budget;
+    vector<Item> daftarBarang;
+
+    cout << "================================\n"
+         << "  Optimalisasi Belanja Bulanan  \n"
+         << "================================\n";
+    cout << "Masukkan budget anda: ";
+    cin >> budget;
+    cout << "\n";
+
+    // Tambah barang pertama kali
+    cout << "-----------------------\n"
+         << "Tambah barang ke daftar\n"
+         << "-----------------------\n\n";
+    tambahBarang(daftarBarang);
+
+    // Menu interaktif
+    char lanjut;
+    do
+    {
+        menu(daftarBarang);
+        cout << "\nKembali ke menu? (y/n): ";
+        cin >> lanjut;
+    } while (lanjut == 'y' || lanjut == 'Y');
+
+    cout << "\nProgram selesai.\n";
+    return 0;
+}
