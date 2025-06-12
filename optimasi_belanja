@@ -19,11 +19,16 @@ void tambahBarang(vector<Item> &daftarBarang)
     {
         cout << "-----------------------\n";
         cout << "Nama Barang     : ";
-        cin >> barang.nama;
+        cin.ignore();
+        getline(cin, barang.nama);
+
         cout << "Harga           : ";
         cin >> barang.harga;
+        do{
         cout << "Value (1-10)    : ";
         cin >> barang.value;
+        } while (barang.value <1 || barang.value > 10);
+
         cout << "Kategori        : ";
         cin >> barang.kategori;
         cout << "-----------------------\n\n";
@@ -36,6 +41,37 @@ void tambahBarang(vector<Item> &daftarBarang)
         {
             break;
         }
+    }
+}
+
+void lihatDaftarBarang(const vector<Item> &daftarBarang)
+{
+    cout << "\n==== Daftar Barang ====\n";
+    if (daftarBarang.empty())
+    {
+        cout << "Belum ada barang.\n";
+        return;
+    }
+    for (size_t i = 0; i < daftarBarang.size(); ++i)
+    {
+        cout << "Barang #" << i + 1 << ":\n";
+        cout << "Nama     : " << daftarBarang[i].nama << '\n';
+        cout << "Harga    : " << daftarBarang[i].harga << '\n';
+        cout << "Value    : " << daftarBarang[i].value << '\n';
+        cout << "Kategori : " << daftarBarang[i].kategori << "\n\n";
+    }
+}
+
+void undoBarangTerakhir(vector<Item> &daftarBarang)
+{
+    if (!daftarBarang.empty())
+    {
+        daftarBarang.pop_back();
+        cout << "Barang terakhir berhasil dihapus.\n";
+    }
+    else
+    {
+        cout << "Daftar barang kosong. Tidak ada yang bisa dihapus.\n";
     }
 }
 
@@ -64,11 +100,11 @@ void menu(vector<Item> &daftarBarang)
     }
     else if (pil == 3)
     {
-        // blm ada. tambahin juga ya
+        undoBarangTerakhir(daftarBarang);
     }
     else if (pil == 4)
     {
-        // ini juga 
+        lihatDaftarBarang(daftarBarang);
     }
     else
     {
