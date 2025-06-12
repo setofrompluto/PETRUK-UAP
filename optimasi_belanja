@@ -14,12 +14,12 @@ void tambahBarang(vector<Item> &daftarBarang)
 {
     Item barang;
     char pil;
+    cin.ignore();
 
     while (true)
     {
         cout << "-----------------------\n";
-        cout << "Nama Barang     : ";
-        cin.ignore();
+        cout << "Nama Barang     : ";  
         getline(cin, barang.nama);
 
         cout << "Harga           : ";
