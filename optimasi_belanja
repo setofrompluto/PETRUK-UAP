@@ -10,6 +10,20 @@ struct Item
     string kategori;
 };
 
+int totalHarga(const vector<Item> &daftarBarang) {
+    int total = 0;
+    for (const auto &item : daftarBarang) {
+        total += item.harga;
+    }
+    return total;
+}
+
+void tampilkanInfoBudget(int budget, const vector<Item> &daftarBarang) {
+    int total = totalHarga(daftarBarang);
+    cout << "\nTotal Harga Belanja : Rp. " << total << '\n';
+    cout << "Sisa Budget          : Rp. " << (budget - total) << "\n";
+}
+
 void tambahBarang(vector<Item> &daftarBarang)
 {
     Item barang;
@@ -111,6 +125,7 @@ void menu(vector<Item> &daftarBarang)
     {
         cout << "Pilihan tidak valid.\n";
     }
+    tampilkanInfoBudget(budget, daftarBarang);
 }
 
 int main()
