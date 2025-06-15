@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <limits>
 using namespace std;
 
 struct Item
@@ -27,8 +28,7 @@ void tampilkanInfoBudget(int budget, const vector<Item> &daftarBarang) {
 void tambahBarang(vector<Item> &daftarBarang)
 {
     Item barang;
-    char pil;
-    
+    char pil;    
 
     while (true)
     {
@@ -37,8 +37,16 @@ void tambahBarang(vector<Item> &daftarBarang)
         cin.ignore();
         getline(cin, barang.nama);
 
+        while (true){
         cout << "Harga           : ";
         cin >> barang.harga;
+        if (!cin.fail() && barang.harga > 0)
+                break;
+            cout << "Masukkan angka yang valid!\n";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+
         do{
         cout << "Value (1-10)    : ";
         cin >> barang.value;
@@ -90,7 +98,7 @@ void undoBarangTerakhir(vector<Item> &daftarBarang)
     }
 }
 
-void menu(vector<Item> &daftarBarang)
+void menu(int budget, vector<Item> &daftarBarang)
 {
     int pil;
     cout << "\n========================\n";
@@ -100,30 +108,35 @@ void menu(vector<Item> &daftarBarang)
     cout << "2. Tambah Barang\n";
     cout << "3. Undo Barang Terakhir\n";
     cout << "4. Lihat Daftar Barang\n";
+    cout << "5. Keluar\n";
     cout << "Masukkan pilihan: ";
     cin >> pil;
 
-    if (pil == 1)
+    switch (pil)
     {
+    case 1:
         // hasilOptimasi(daftarBarang, budget);
         // tolong tambahin ya hehe
         cout << "[!] Fitur optimasi belum dibuat.\n";
-    }
-    else if (pil == 2)
-    {
+        break;
+   case 2:
+    
         tambahBarang(daftarBarang);
-    }
-    else if (pil == 3)
-    {
+         break;
+    case 3:
+    
         undoBarangTerakhir(daftarBarang);
-    }
-    else if (pil == 4)
-    {
+         break;
+    case 4:
+    
         lihatDaftarBarang(daftarBarang);
-    }
-    else
-    {
+         break;
+    case 5:
+        cout << "Keluar dari program...\n";
+        exit(0);
+    default:
         cout << "Pilihan tidak valid.\n";
+         break;
     }
     tampilkanInfoBudget(budget, daftarBarang);
 }
@@ -136,8 +149,15 @@ int main()
     cout << "================================\n"
          << "  Optimalisasi Belanja Bulanan  \n"
          << "================================\n";
+while (true){
     cout << "Masukkan budget anda: ";
     cin >> budget;
+    if (!cin.fail() && budget > 0)
+            break;
+        cout << "Budget harus berupa angka dan lebih dari 0.\n";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
     cout << "\n";
 
     // Tambah barang pertama kali
@@ -147,13 +167,9 @@ int main()
     tambahBarang(daftarBarang);
 
     // Menu interaktif
-    char lanjut;
-    do
-    {
-        menu(daftarBarang);
-        cout << "\nKembali ke menu? (y/n): ";
-        cin >> lanjut;
-    } while (lanjut == 'y' || lanjut == 'Y');
+     while (true) {
+        menu(budget, daftarBarang);
+    }
 
     cout << "\nProgram selesai.\n";
     return 0;
