@@ -1,4 +1,6 @@
 #include <iostream>
+#include <algorithm>
+#include <fstream>
 #include <vector>
 #include <limits>
 using namespace std;
@@ -47,16 +49,16 @@ void tambahBarang(vector<Item> &daftarBarang)
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
 
-        do{
-        cout << "Value (1-10)    : ";
-        cin >> barang.value;
-        } while (barang.value <1 || barang.value > 10);
+        do {
+            cout << "Berat (1-10)    : ";
+            cin >> barang.berat;
+        } while (barang.berat < 1 || barang.berat > 10);
 
         cout << "Kategori        : ";
         cin >> barang.kategori;
+        daftarBarang.push_back(barang);
         cout << "-----------------------\n\n";
 
-        daftarBarang.push_back(barang);
         cout << "Barang berhasil ditambahkan!\n";
         cout << "Tambah barang lagi? (y/n): ";
         cin >> pil;
@@ -96,6 +98,85 @@ void undoBarangTerakhir(vector<Item> &daftarBarang)
     {
         cout << "Daftar barang kosong. Tidak ada yang bisa dihapus.\n";
     }
+}
+
+void merge(vector<Item> &arr, int left, int mid, int right, const string &kunci) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    vector<Item> L(n1), R(n2);
+
+    for (int i = 0; i < n1; ++i)
+        L[i] = arr[left + i];
+    for (int j = 0; j < n2; ++j)
+        R[j] = arr[mid + 1 + j];
+
+    int i = 0, j = 0, k = left;
+
+    while (i < n1 && j < n2) {
+        bool kondisi = false;
+        if (kunci == "harga")
+            kondisi = L[i].harga <= R[j].harga;
+        else if (kunci == "berat")
+            kondisi = L[i].berat <= R[j].berat;
+        else if (kunci == "nama")
+            kondisi = L[i].nama <= R[j].nama;
+
+        if (kondisi)
+            arr[k++] = L[i++];
+        else
+            arr[k++] = R[j++];
+    }
+
+    while (i < n1)
+        arr[k++] = L[i++];
+    while (j < n2)
+        arr[k++] = R[j++];
+}
+
+void mergeSort(vector<Item> &arr, int left, int right, const string &kunci) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+        mergeSort(arr, left, mid, kunci);
+        mergeSort(arr, mid + 1, right, kunci);
+        merge(arr, left, mid, right, kunci);
+    }
+}
+
+void hasilOptimasi(vector<Item> daftarBarang, int budget) {
+    cout << "\n=== Hasil Optimasi Berdasarkan Berat/Harga ===\n";
+    sort(daftarBarang.begin(), daftarBarang.end(), [](const Item &a, const Item &b) {
+        double rasioA = (double)a.berat / a.harga;
+        double rasioB = (double)b.berat / b.harga;
+        return rasioA > rasioB;
+    });
+
+    vector<Item> hasil;
+    int total = 0, totalBerat = 0;
+
+    for (const auto &item : daftarBarang) {
+        if (total + item.harga <= budget) {
+            hasil.push_back(item);
+            total += item.harga;
+            totalBerat += item.berat;
+        }
+    }
+
+    if (hasil.empty()) {
+        cout << "Tidak ada kombinasi barang yang cocok dengan budget.\n";
+        return;
+    }
+
+    for (const auto &item : hasil) {
+        cout << "Nama     : " << item.nama << '\n';
+        cout << "Harga    : Rp. " << item.harga << '\n';
+        cout << "Berat    : " << item.berat << '\n';
+        cout << "Kategori : " << item.kategori << "\n\n";
+    }
+
+    cout << "Total Harga : Rp. " << total << '\n';
+    cout << "Total Berat : " << totalBerat << '\n';
+    cout << "Sisa Budget : Rp. " << (budget - total) << '\n';
 }
 
 void menu(int budget, vector<Item> &daftarBarang)
