@@ -9,7 +9,7 @@ struct Item
 {
     string nama;
     int harga;
-    int value;
+    int berat;
     string kategori;
 };
 
@@ -82,7 +82,7 @@ void lihatDaftarBarang(const vector<Item> &daftarBarang)
         cout << "Barang #" << i + 1 << ":\n";
         cout << "Nama     : " << daftarBarang[i].nama << '\n';
         cout << "Harga    : " << daftarBarang[i].harga << '\n';
-        cout << "Value    : " << daftarBarang[i].value << '\n';
+        cout << "Berat    : " << daftarBarang[i].berat << '\n';
         cout << "Kategori : " << daftarBarang[i].kategori << "\n\n";
     }
 }
@@ -179,8 +179,37 @@ void hasilOptimasi(vector<Item> daftarBarang, int budget) {
     cout << "Sisa Budget : Rp. " << (budget - total) << '\n';
 }
 
-void menu(int budget, vector<Item> &daftarBarang)
-{
+void urutkanBarang(vector<Item> &daftarBarang) {
+    if (daftarBarang.empty()) {
+        cout << "Daftar barang kosong, tidak dapat diurutkan.\n";
+        return;
+    }
+
+    cout << "\n=== Pilih Kriteria Pengurutan ===\n";
+    cout << "1. Berdasarkan Harga\n";
+    cout << "2. Berdasarkan Berat\n";
+    cout << "3. Berdasarkan Nama\n";
+    cout << "Pilih: ";
+
+    int pilih;
+    cin >> pilih;
+    string kunci;
+
+    switch (pilih) {
+        case 1: kunci = "harga"; break;
+        case 2: kunci = "berat"; break;
+        case 3: kunci = "nama"; break;
+        default:
+            cout << "Pilihan tidak valid.\n";
+            return;
+    }
+
+    mergeSort(daftarBarang, 0, daftarBarang.size() - 1, kunci);
+    cout << "[V] Barang berhasil diurutkan berdasarkan " << kunci << ".\n";
+    lihatDaftarBarang(daftarBarang);
+}
+
+void menu(int budget, vector<Item> &daftarBarang) {
     int pil;
     cout << "\n========================\n";
     cout << "      Menu Pilihan      \n";
@@ -189,37 +218,24 @@ void menu(int budget, vector<Item> &daftarBarang)
     cout << "2. Tambah Barang\n";
     cout << "3. Undo Barang Terakhir\n";
     cout << "4. Lihat Daftar Barang\n";
-    cout << "5. Keluar\n";
+    cout << "5. Urutkan Barang\n";
+    cout << "6. Keluar\n";
     cout << "Masukkan pilihan: ";
     cin >> pil;
 
-    switch (pil)
-    {
-    case 1:
-        // hasilOptimasi(daftarBarang, budget);
-        // tolong tambahin ya hehe
-        cout << "[!] Fitur optimasi belum dibuat.\n";
-        break;
-   case 2:
-    
-        tambahBarang(daftarBarang);
-         break;
-    case 3:
-    
-        undoBarangTerakhir(daftarBarang);
-         break;
-    case 4:
-    
-        lihatDaftarBarang(daftarBarang);
-         break;
-    case 5:
-        cout << "Keluar dari program...\n";
-        exit(0);
-    default:
-        cout << "Pilihan tidak valid.\n";
-         break;
+    switch (pil) {
+        case 1: hasilOptimasi(daftarBarang, budget); break;
+        case 2: tambahBarang(daftarBarang); break;
+        case 3: undoBarangTerakhir(daftarBarang); break;
+        case 4: lihatDaftarBarang(daftarBarang); break;
+        case 5: urutkanBarang(daftarBarang); break;
+        case 6:
+            cout << "Keluar dari program...\n";
+            exit(0);
+        default:
+            cout << "Pilihan tidak valid.\n";
+            break;
     }
-    tampilkanInfoBudget(budget, daftarBarang);
 }
 
 int main()
